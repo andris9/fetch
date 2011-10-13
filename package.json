@@ -1,0 +1,29 @@
+{
+    "name": "fetch",
+    "description": "Fetch URL contents",
+    "version": "0.1.0",
+    "author" : "Andris Reinman",
+    "maintainers":[
+        {
+            "name":"andris",
+            "email":"andris@node.ee"
+        }
+    ],
+    "homepage": "http://github.com/andris9/fetch",
+    "repository" : {
+        "type" : "git",
+        "url" : "http://github.com/andris9/fetch.git"
+    },
+    "main" : "./fetch",
+    "licenses" : [
+        {
+            "type": "MIT",
+            "url": "http://github.com/andris9/fetch/blob/master/LICENSE"
+        }
+    ],
+    "dependencies": {
+        "mimelib-noiconv":"*"
+    },
+    "engine": [ "node >=0.5.0" ],
+    "keywords": ["url"]
+}
