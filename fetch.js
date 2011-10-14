@@ -8,24 +8,24 @@ var http = require("http"),
 
 /*
 
-headers: {}
-payload: txt
-
-maxresponse (100kB)
-headers: {}
-maxredirects: 10
-
-
 maxRedirects : 10
 disableRedirects : false
 headers: {}
 maxResponseLength : Infinity
 method: GET
 payload: str
+disableGzip: false
 
 cookies: ['name=val']
 
+setEncoding: true | utf-8 | latin-1 jne
+
 */
+
+//TODO:
+// - meta infosse faili nimi, juhul kui tegu downloadiga
+// - wrapper fetch(url, callback)
+// - wrapperile options.setEncoding = true | "UTF-8"
 
 exports.FetchStream = FetchStream;
 
