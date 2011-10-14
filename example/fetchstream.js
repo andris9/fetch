@@ -1,6 +1,6 @@
-var FetchStream = require("./fetch").FetchStream;
+var FetchStream = require("../lib/fetch").FetchStream;
 
-var fetch = new FetchStream("http://neti.ee",{
+var fetch = new FetchStream("http://google.com",{
     headers:{}
 });
 

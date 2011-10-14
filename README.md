@@ -8,7 +8,62 @@ Fetch url contents. Supports gzipped content for quicker download, redirects (wi
 
 ## Usage
 
-See test.js for a complete example
+See examples folder for a complete example
+
+## Fetch from URL
+
+`fetch.fetchUrl(url [, options], callback)`
+
+Where
+
+  * **url** is the url to fetch
+  * **options** is an optional options object
+  * **callback** is the callback to run - `callback(error, meta, body)`
+
+Example
+
+    var fetchUrl = require("fetch").fetchUrl;
+
+    // source file is iso-8859-15 but it is converted to utf-8 automatically
+    fetchUrl("http://kreata.ee/iso-8859-15.php", function(error, meta, body){
+        console.log(body.toString());
+    });
+
+## Streaming
+
+`fetch.FetchStream(url [, options]) -> Stream`
+
+Where
+
+  * **url** is the url to fetch
+  * **options** is an optional options object
+
+With events:
+
+  * **data** with a data chunk - `function(chunk){}`
+  * **meta** with some information about the response `function(meta){}`
+  * **end** when the receiving is ready
+  * **error**
+
+Example
+
+    var FetchStream = require("../lib/fetch").FetchStream;
+
+    var fetch = new FetchStream("http://google.com");
+
+    fetch.on("data", function(chunk){
+        console.log(chunk);
+    });
+
+## Meta object
+
+Meta object contains following fields:
+
+  * **status**
+  * **responseHeaders**
+  * **finalUrl**
+  * **redirectCount**
+  * **cookieJar**
 
 ## Headers
 
@@ -38,6 +93,27 @@ Cookies can be set with `options.cookies` which takes an array with cookie defin
 
 **NB** Do not set cookie field directly in request header as it will be overwritten.
 
+## Cookie sharing
+
+Cookies can be shared between different requests, this can be achieved with `CookieJar`
+
+    var fetch = require("./fetch");
+
+    var cookies = new fetch.CookieJar();
+
+    // add one cookie for testing
+    cookies.setCookie('alfa=beta; path=/;');
+
+    // create a FetchStream with custom CookieJar
+    var f = fetch.FetchStream("http://www.example.com/page1",{cookieJar: cookies});
+
+    f.on("end", function(){
+        // if cookies were set with the previos request, the data is
+        // saved in 'cookieJar' and passed to the next request
+        fetch.FetchStream("http://www.example.com/page1",{cookieJar: cookies});
+    });
+
+
 ## Redirects
 
 Redirects are on by default, use `options.disableRedirects` to disable. Maximum redirect count can be set with `options.maxRedirects` (defaults to 10)
@@ -52,7 +128,7 @@ Redirects are on by default, use `options.disableRedirects` to disable. Maximum 
 
 ## Disable Gzip support
 
-Gzip and Deflate support is automatically on. This is problematic in Node v0.5.9 and below since Zlib on these versions is buggy and tends to yield in error.
+Gzip and Deflate support is automatically on. This is problematic in Node v0.5.9 and below since Zlib support on these versions is buggy with unpacking and tends to yield in error.
 
     options = {
         disableGzip: true
