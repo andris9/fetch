@@ -1,7 +1,22 @@
-var fetch = require("./fetch");
+var FetchStream = require("./fetch").FetchStream;
 
-fetch("https://www.google.com", function(error, contents){
-    console.log(error || contents);
-    console.log(contents.body.toString("utf-8"))
-    console.log(contents.body.toString("utf-8").length)
+var fetch = new FetchStream("http://neti.ee",{
+    headers:{}
 });
+
+fetch.on("data", function(chunk){
+    console.log(chunk);
+});
+
+fetch.on("meta", function(meta){
+    console.log(meta);
+});
+
+fetch.on("end", function(){
+    console.log("END");
+});
+
+fetch.on("error", function(e){
+    console.log("ERROR: " + (e && e.message || e));
+});
+

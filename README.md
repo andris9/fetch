@@ -1,20 +1,12 @@
 # fetch
 
-Fetch url contents
+Fetch url contents. Supports gzipped content for quicker download, redirects(with automatic cookie handling), streaming etc.
 
 ## Install
 
     npm install fetch
 
 ## Usage
-
-    var fetch = require("fetch");
-
-    fetch("http://www.google.com", function(error, response){
-        console.log(response.status);
-        console.log(response.headers);
-        console.log(response.body);
-    });
 
 See test.js for a complete example
 
