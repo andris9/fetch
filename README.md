@@ -109,6 +109,8 @@ Cookies can be set with `options.cookies` which takes an array with cookie defin
         cookie: ["name=value", "key=value; path=/; secure"]
     }
 
+Paths, domain, expire settings are honored, so try not to set cookies with expire dates in the past.
+
 **NB** Do not set cookie field directly in request header as it will be overwritten.
 
 ## Cookie sharing
