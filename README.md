@@ -49,7 +49,7 @@ With events:
 
 Example
 
-    var FetchStream = require("../lib/fetch").FetchStream;
+    var FetchStream = require("fetch").FetchStream;
 
     var fetch = new FetchStream("http://google.com");
 
@@ -117,7 +117,7 @@ Paths, domain, expire and other cookie settings are honored, so try not to set c
 
 Cookies can be shared between different requests, this can be achieved with `CookieJar`
 
-    var fetch = require("./fetch");
+    var fetch = require("fetch");
 
     var cookies = new fetch.CookieJar();
 
@@ -158,7 +158,7 @@ Gzip and Deflate support is automatically on. This is problematic in Node v0.5.9
 
 `FetchStream` is a readable Stream object and thus can be piped. For example stream URL contents directly to a file:
 
-    var FetchStream = require("./fetch").FetchStream,
+    var FetchStream = require("fetch").FetchStream,
         fs = require("fs"),
         out;
 
