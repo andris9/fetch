@@ -29,7 +29,7 @@ Example
         console.log(body.toString());
     });
 
-**NB** If the loaded file has been marked with charset not urf-8, it is converted automatically.
+**NB** If the file has been marked with charset other than utf-8, it is converted automatically.
 
 ## Streaming
 
