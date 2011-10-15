@@ -29,6 +29,8 @@ Example
         console.log(body.toString());
     });
 
+**NB** If the loaded file has been marked with charset not urf-8, it is converted automatically.
+
 ## Streaming
 
 `fetch.FetchStream(url [, options]) -> Stream`
@@ -55,15 +57,31 @@ Example
         console.log(chunk);
     });
 
+## Options
+
+Possible option values
+
+ * **maxRedirects** how many redirects allowed, defaults to 10
+ * **disableRedirects** set to true if redirects are not allowed, defaults to false
+ * **headers** optional header fields, in the form of `{'Header-Field':'value'}`
+ * **maxResponseLength** maximum allowd length for the file, the remainder is cut off. Defaults to `Infinity`
+ * **method** defaults to GET
+ * **payload** request body
+ * **disableGzip** set to false, to disable content gzipping, needed for Node v0.5.9 which has buggy zlib
+ * **cookies** an array of cookie definitions in the form of `['name=val']`
+ * **cookieJar** for sharing cookies between requests, see below
+ * **outputEncoding** valid for `fetchUrl`
+ * **disableDecoding** valid for `fetchUrl`, set to true to disable automatic charset decoding to utf-8
+
 ## Meta object
 
 Meta object contains following fields:
 
-  * **status**
-  * **responseHeaders**
-  * **finalUrl**
-  * **redirectCount**
-  * **cookieJar**
+  * **status** HTTP status code
+  * **responseHeaders** response headers
+  * **finalUrl** last url value, useful with redirects
+  * **redirectCount** how many redirects happened
+  * **cookieJar** CookieJar object for sharing/retrieving cookies
 
 ## Headers
 

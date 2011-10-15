@@ -1,7 +1,7 @@
 {
     "name": "fetch",
     "description": "Fetch URL contents",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "author" : "Andris Reinman",
     "maintainers":[
         {
