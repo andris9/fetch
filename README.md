@@ -72,6 +72,7 @@ Possible option values
  * **cookieJar** for sharing cookies between requests, see below
  * **outputEncoding** valid for `fetchUrl`
  * **disableDecoding** valid for `fetchUrl`, set to true to disable automatic charset decoding to utf-8
+ * **overrideEncoding** valid for `fetchUrl`, set input encoding
 
 ## Meta object
 
