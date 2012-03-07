@@ -73,6 +73,10 @@ Possible option values
  * **outputEncoding** valid for `fetchUrl`
  * **disableDecoding** valid for `fetchUrl`, set to true to disable automatic charset decoding to utf-8
  * **overrideCharset** valid for `fetchUrl`, set input encoding
+ * **asyncDnsLoookup** use high performance asyncronous DNS resolution based on c-ares instead of a thread pool calling getaddrinfo(3)
+ * **timeout** set a timeout in ms
+ * **agent** pass-through http.request agent parameter
+
 
 ## Meta object
 
