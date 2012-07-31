@@ -1,7 +1,7 @@
 {
   "name": "fetch",
   "description": "Fetch URL contents",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "author": "Andris Reinman",
   "maintainers": [
     "andris <andris@node.ee>"
