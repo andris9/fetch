@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/andris9/fetch.png)](http://travis-ci.org/andris9/fetch)
 # fetch
 
 Fetch url contents. Supports gzipped content for quicker download, redirects (with automatic cookie handling, so no eternal redirect loops), streaming and piping etc.
