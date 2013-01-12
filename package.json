@@ -1,7 +1,7 @@
 {
   "name": "fetch",
   "description": "Fetch URL contents",
-  "version": "0.2.9",
+  "version": "0.3.0",
   "author": "Andris Reinman",
   "maintainers": [
     "andris <andris@node.ee>"
@@ -19,7 +19,7 @@
     }
   ],
   "dependencies": {
-    "iconv": "*"
+    "encoding": "*"
   },
   "engines": ["node >=0.5.10"],
   "keywords": [

@@ -31,6 +31,9 @@ Example
 
 **NB** If the file has been marked with charset other than utf-8, it is converted automatically.
 
+By default `iconv-lite` is used for charset conversion. If you want to use `node-iconv` module instead,
+add `"iconv": "*"` to your package.json file, it will be picked up by `fetch` automatically.
+
 ## Streaming
 
 `fetch.FetchStream(url [, options]) -> Stream`
