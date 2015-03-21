@@ -79,6 +79,7 @@ Possible option values
  * **asyncDnsLoookup** use high performance asyncronous DNS resolution based on c-ares instead of a thread pool calling getaddrinfo(3)
  * **timeout** set a timeout in ms
  * **agent** pass-through http.request agent parameter
+ * **rejectUnauthorized** whether to reject self-signed certificates (`true`, default behavior), or ignore and allow them (`false`)
 
 
 ## Meta object
