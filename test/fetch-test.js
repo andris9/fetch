@@ -10,7 +10,6 @@ var expect = chai.expect;
 var fetch = require('../lib/fetch');
 var http = require('http');
 var https = require('https');
-var zlib = require('zlib');
 
 chai.config.includeStack = true;
 
@@ -65,6 +64,7 @@ var httpsOptions = {
 };
 
 describe('fetch tests', function () {
+    this.timeout(10000); // eslint-disable-line
     var httpServer, httpsServer;
 
     beforeEach(function (done) {
@@ -118,7 +118,7 @@ describe('fetch tests', function () {
                         'Content-Type': 'text/plain',
                         'Content-Encoding': 'gzip'
                     });
-                    res.end(zlib.gzipSync('Hello World HTTP\n'));
+                    res.end(new Buffer('H4sIAAAAAAAAA/NIzcnJVwjPL8pJUfAICQngAgCwsOrsEQAAAA==', 'base64'));
                     break;
 
                 case '/invalid':
@@ -269,8 +269,11 @@ describe('fetch tests', function () {
     });
 
     it('should return error for invalid protocol', function (done) {
-        var req = new fetch.FetchStream('http://localhost:' + HTTPS_PORT);
+        var req = new fetch.FetchStream('http://localhost:' + HTTPS_PORT, {
+            timeout: 1000
+        });
         var buf = [];
+
         req.on('data', function (chunk) {
             buf.push(chunk);
         });
