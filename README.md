@@ -2,6 +2,8 @@
 
 Fetch url contents. Supports gzipped content for quicker download, redirects (with automatic cookie handling, so no eternal redirect loops), streaming and piping etc.
 
+[![Build Status](https://travis-ci.org/andris9/fetch.svg?branch=master)](https://travis-ci.org/andris9/fetch)
+
 ## Install
 
     npm install fetch
