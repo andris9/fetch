@@ -80,7 +80,9 @@ Possible option values
  * **overrideCharset** valid for `fetchUrl`, set input encoding
  * **asyncDnsLoookup** use high performance asyncronous DNS resolution based on c-ares instead of a thread pool calling getaddrinfo(3)
  * **timeout** set a timeout in ms
- * **agent** pass-through http.request agent parameter
+ * **agentHttps** pass-through http.request agent parameter for https
+ * **agentHttp** pass-through http.request agent parameter for http
+ * **agent** pass-through http.request agent parameter as fallback, if agentHttps or agentHttp are not specified
  * **rejectUnauthorized** whether to reject self-signed certificates (`true`, default behavior), or ignore and allow them (`false`)
 
 
