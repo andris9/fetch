@@ -15,7 +15,7 @@ chai.config.includeStack = true;
 
 var HTTP_PORT = 9998;
 var HTTPS_PORT = 9993;
-var USE_ALLOC = typeof Buffer.alloc === 'function' ? true : false;
+var USE_ALLOC = typeof Buffer.alloc === 'function';
 
 var httpsOptions = {
     key: '-----BEGIN RSA PRIVATE KEY-----\n' +
