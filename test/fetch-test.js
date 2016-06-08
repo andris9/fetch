@@ -15,6 +15,7 @@ chai.config.includeStack = true;
 
 var HTTP_PORT = 9998;
 var HTTPS_PORT = 9993;
+var USE_ALLOC = typeof Buffer.alloc === 'function';
 
 var httpsOptions = {
     key: '-----BEGIN RSA PRIVATE KEY-----\n' +
@@ -118,7 +119,10 @@ describe('fetch tests', function () {
                         'Content-Type': 'text/plain',
                         'Content-Encoding': 'gzip'
                     });
-                    res.end(new Buffer('H4sIAAAAAAAAA/NIzcnJVwjPL8pJUfAICQngAgCwsOrsEQAAAA==', 'base64'));
+                    var str = 'H4sIAAAAAAAAA/NIzcnJVwjPL8pJUfAICQngAgCwsOrsEQAAAA==';
+                    var strSize = Buffer.byteLength(str, 'base64');
+                    var strBuf = USE_ALLOC ? Buffer.alloc(strSize, str, 'base64') : new Buffer(str, 'base64');
+                    res.end(strBuf);
                     break;
 
                 case '/invalid':
@@ -132,7 +136,10 @@ describe('fetch tests', function () {
                     res.writeHead(200, {
                         'Content-Type': 'text/plain'
                     });
-                    res.end(new Buffer(req.headers.authorization.split(' ').pop(), 'base64'));
+                    var auth = req.headers.authorization.split(' ').pop();
+                    var authSize = Buffer.byteLength(auth, 'base64');
+                    var authBuf = USE_ALLOC ? Buffer.alloc(authSize, auth, 'base64') : new Buffer(auth, 'base64');
+                    res.end(authBuf);
                     break;
 
                 default:
