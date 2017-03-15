@@ -123,7 +123,7 @@ User-Agent value can be set with `options.headers['User-Agent']` value. Defaults
 Cookies can be set with `options.cookies` which takes an array with cookie definitions
 
     options = {
-        cookie: ["name=value", "key=value; path=/; secure"]
+        cookies: ["name=value", "key=value; path=/; secure"]
     }
 
 Paths, domain, expire and other cookie settings are honored, so try not to set cookies with expire dates in the past. If domain is not set, any domain will pass, same for paths.
