@@ -1,5 +1,5 @@
 {
-    "name": "fetch",
+    "name": "httpfetch",
     "description": "Fetch URL contents",
     "version": "2.0.0",
     "author": "Andris Reinman",
