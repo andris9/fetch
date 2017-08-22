@@ -1,15 +1,16 @@
+/* eslint no-console:0 */
+
 'use strict';
 
 // pipe to file
 
-var FetchStream = require('../lib/fetch').FetchStream,
-    fs = require('fs'),
-    inp, out;
+const FetchStream = require('../lib/fetch').FetchStream;
+const fs = require('fs');
 
-inp = new FetchStream('http://google.com');
-out = fs.createWriteStream('google.html');
+const inp = new FetchStream('http://google.com');
+const out = fs.createWriteStream('google.html');
 
-inp.on('end', function(){
+inp.on('end', () => {
     console.log('downloaded!');
 });
 

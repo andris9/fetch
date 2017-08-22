@@ -3,22 +3,22 @@
 
 'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
+const chai = require('chai');
+const expect = chai.expect;
 
 //var http = require('http');
-var fetch = require('../lib/fetch');
-var http = require('http');
-var https = require('https');
+const fetch = require('../lib/fetch');
+const http = require('http');
+const https = require('https');
 
 chai.config.includeStack = true;
 
-var HTTP_PORT = 9998;
-var HTTPS_PORT = 9993;
-var USE_ALLOC = typeof Buffer.alloc === 'function';
+const HTTP_PORT = 9998;
+const HTTPS_PORT = 9993;
 
-var httpsOptions = {
-    key: '-----BEGIN RSA PRIVATE KEY-----\n' +
+let httpsOptions = {
+    key:
+        '-----BEGIN RSA PRIVATE KEY-----\n' +
         'MIIEpAIBAAKCAQEA6Z5Qqhw+oWfhtEiMHE32Ht94mwTBpAfjt3vPpX8M7DMCTwHs\n' +
         '1xcXvQ4lQ3rwreDTOWdoJeEEy7gMxXqH0jw0WfBx+8IIJU69xstOyT7FRFDvA1yT\n' +
         'RXY2yt9K5s6SKken/ebMfmZR+03ND4UFsDzkz0FfgcjrkXmrMF5Eh5UXX/+9YHeU\n' +
@@ -45,7 +45,8 @@ var httpsOptions = {
         'wXOpdKrvkjZbT4AzcNrlGtRl3l7dEVXTu+dN7/ZieJRu7zaStlAQZkIyP9O3DdQ3\n' +
         'rIcetQpfrJ1cAqz6Ng0pD0mh77vQ13WG1BBmDFa2A9BuzLoBituf4g==\n' +
         '-----END RSA PRIVATE KEY-----',
-    cert: '-----BEGIN CERTIFICATE-----\n' +
+    cert:
+        '-----BEGIN CERTIFICATE-----\n' +
         'MIICpDCCAYwCCQCuVLVKVTXnAjANBgkqhkiG9w0BAQsFADAUMRIwEAYDVQQDEwls\n' +
         'b2NhbGhvc3QwHhcNMTUwMjEyMTEzMjU4WhcNMjUwMjA5MTEzMjU4WjAUMRIwEAYD\n' +
         'VQQDEwlsb2NhbGhvc3QwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDp\n' +
@@ -64,14 +65,13 @@ var httpsOptions = {
         '-----END CERTIFICATE-----'
 };
 
-describe('fetch tests', function () {
+describe('fetch tests', function() {
     this.timeout(10000); // eslint-disable-line
-    var httpServer, httpsServer;
+    let httpServer, httpsServer;
 
-    beforeEach(function (done) {
-        httpServer = http.createServer(function (req, res) {
+    beforeEach(done => {
+        httpServer = http.createServer((req, res) => {
             switch (req.url) {
-
                 case '/redirect6':
                     res.writeHead(302, {
                         Location: '/redirect5'
@@ -114,16 +114,16 @@ describe('fetch tests', function () {
                     res.end();
                     break;
 
-                case '/gzip':
+                case '/gzip': {
                     res.writeHead(200, {
                         'Content-Type': 'text/plain',
                         'Content-Encoding': 'gzip'
                     });
-                    var str = 'H4sIAAAAAAAAA/NIzcnJVwjPL8pJUfAICQngAgCwsOrsEQAAAA==';
-                    var strSize = Buffer.byteLength(str, 'base64');
-                    var strBuf = USE_ALLOC ? Buffer.alloc(strSize, str, 'base64') : new Buffer(str, 'base64');
+                    let str = 'H4sIAAAAAAAAA/NIzcnJVwjPL8pJUfAICQngAgCwsOrsEQAAAA==';
+                    let strBuf = Buffer.from(str, 'base64');
                     res.end(strBuf);
                     break;
+                }
 
                 case '/invalid':
                     res.writeHead(500, {
@@ -132,16 +132,23 @@ describe('fetch tests', function () {
                     res.end('Hello World HTTP\n');
                     break;
 
-                case '/auth':
-                    res.writeHead(200, {
-                        'Content-Type': 'text/plain'
-                    });
-                    var auth = req.headers.authorization.split(' ').pop();
-                    var authSize = Buffer.byteLength(auth, 'base64');
-                    var authBuf = USE_ALLOC ? Buffer.alloc(authSize, auth, 'base64') : new Buffer(auth, 'base64');
-                    res.end(authBuf);
-                    break;
+                case '/auth': {
+                    let auth = (req.headers.authorization || '').toString().split(' ').pop().trim();
+                    if (Buffer.from(auth, 'base64').toString() === 'user:pass') {
+                        res.writeHead(200, {
+                            'Content-Type': 'text/plain'
+                        });
+                        res.end(Buffer.from(auth, 'base64'));
+                    } else {
+                        res.writeHead(401, {
+                            'Content-Type': 'text/plain',
+                            'WWW-Authenticate': 'Basic realm="User Visible Realm"'
+                        });
+                        res.end('Authentication required');
+                    }
 
+                    break;
+                }
                 default:
                     res.writeHead(200, {
                         'Content-Type': 'text/plain'
@@ -150,144 +157,177 @@ describe('fetch tests', function () {
             }
         });
 
-        httpsServer = https.createServer(httpsOptions, function (req, res) {
+        httpsServer = https.createServer(httpsOptions, (req, res) => {
             res.writeHead(200, {
                 'Content-Type': 'text/plain'
             });
             res.end('Hello World HTTPS\n');
         });
 
-        httpServer.listen(HTTP_PORT, function () {
+        httpServer.listen(HTTP_PORT, () => {
             httpsServer.listen(HTTPS_PORT, done);
         });
     });
 
-    afterEach(function (done) {
-        httpServer.close(function () {
+    afterEach(done => {
+        httpServer.close(() => {
             httpsServer.close(done);
         });
     });
 
-    it('should fetch HTTP data', function (done) {
-        var req = new fetch.FetchStream('http://localhost:' + HTTP_PORT);
-        var buf = [];
-        req.on('data', function (chunk) {
+    it('should fetch HTTP data', done => {
+        let req = new fetch.FetchStream('http://localhost:' + HTTP_PORT);
+        let buf = [];
+        req.on('data', chunk => {
             buf.push(chunk);
         });
-        req.on('end', function () {
+        req.on('end', () => {
             expect(Buffer.concat(buf).toString()).to.equal('Hello World HTTP\n');
             done();
         });
     });
 
-    it('should fetch HTTPS data', function (done) {
-        var req = new fetch.FetchStream('https://localhost:' + HTTPS_PORT, {
+    it('should fetch HTTPS data', done => {
+        let req = new fetch.FetchStream('https://localhost:' + HTTPS_PORT, {
             rejectUnauthorized: false
         });
-        var buf = [];
-        req.on('data', function (chunk) {
+        let buf = [];
+        req.on('data', chunk => {
             buf.push(chunk);
         });
-        req.on('end', function () {
+        req.on('end', () => {
             expect(Buffer.concat(buf).toString()).to.equal('Hello World HTTPS\n');
             done();
         });
     });
 
-    it('should fail on self signed HTTPS certificate', function (done) {
-        var req = new fetch.FetchStream('https://localhost:' + HTTPS_PORT);
-        req.on('error', function (err) {
+    it('should fail on self signed HTTPS certificate', done => {
+        let req = new fetch.FetchStream('https://localhost:' + HTTPS_PORT);
+        req.on('error', err => {
             expect(err).to.exist;
             done();
         });
-        req.on('data', function () {
+        req.on('data', () => {
             expect(false).to.be.true;
         });
-        req.on('end', function () {
+        req.on('end', () => {
             expect(false).to.be.true;
         });
     });
 
-    it('should fetch HTTP data with redirects', function (done) {
-        var req = new fetch.FetchStream('http://localhost:' + HTTP_PORT + '/redirect3');
-        var buf = [];
-        req.on('data', function (chunk) {
+    it('should fetch HTTP data with redirects', done => {
+        let req = new fetch.FetchStream('http://localhost:' + HTTP_PORT + '/redirect3');
+        let buf = [];
+        req.on('data', chunk => {
             buf.push(chunk);
         });
-        req.on('end', function () {
+        req.on('end', () => {
             expect(Buffer.concat(buf).toString()).to.equal('Hello World HTTP\n');
             done();
         });
     });
 
-    it('should not follow too many redirects', function (done) {
-        var req = new fetch.FetchStream('http://localhost:' + HTTP_PORT + '/redirect6', {
+    it('should not follow too many redirects', done => {
+        let req = new fetch.FetchStream('http://localhost:' + HTTP_PORT + '/redirect6', {
             maxRedirects: 5
         });
 
-        req.on('meta', function (meta) {
+        req.on('meta', meta => {
             expect(meta.status).to.equal(302);
         });
 
-        var buf = [];
-        req.on('data', function (chunk) {
+        let buf = [];
+        req.on('data', chunk => {
             buf.push(chunk);
         });
-        req.on('end', function () {
+        req.on('end', () => {
             done();
         });
     });
 
-    it('should unzip compressed HTTP data', function (done) {
-        var req = new fetch.FetchStream('http://localhost:' + HTTP_PORT + '/gzip');
-        var buf = [];
-        req.on('data', function (chunk) {
+    it('should unzip compressed HTTP data', done => {
+        let req = new fetch.FetchStream('http://localhost:' + HTTP_PORT + '/gzip');
+        let buf = [];
+        req.on('data', chunk => {
             buf.push(chunk);
         });
-        req.on('end', function () {
+        req.on('end', () => {
             expect(Buffer.concat(buf).toString()).to.equal('Hello World HTTP\n');
             done();
         });
     });
 
-    it('should return error for unresolved host', function (done) {
-        var req = new fetch.FetchStream('http://asfhaskhhgbjdsfhgbsdjgk');
-        var buf = [];
-        req.on('data', function (chunk) {
+    it('should return error for unresolved host', done => {
+        let req = new fetch.FetchStream('http://asfhaskhhgbjdsfhgbsdjgk');
+        let buf = [];
+        req.on('data', chunk => {
             buf.push(chunk);
         });
-        req.on('error', function (err) {
+        req.on('error', err => {
             expect(err).to.exist;
             done();
         });
-        req.on('end', function () {});
+        req.on('end', () => {});
     });
 
-    it('should handle basic HTTP auth', function (done) {
-        var req = new fetch.FetchStream('http://user:pass@localhost:' + HTTP_PORT + '/auth');
-        var buf = [];
-        req.on('data', function (chunk) {
+    it('should fail basic HTTP auth', done => {
+        let req = new fetch.FetchStream('http://localhost:' + HTTP_PORT + '/auth');
+        let buf = [];
+        req.on('data', chunk => {
             buf.push(chunk);
         });
-        req.on('end', function () {
+        req.on('error', err => {
+            expect(err).to.exist;
+            done();
+        });
+        req.on('meta', meta => {
+            expect(meta.status).to.equal(401);
+        });
+        req.on('end', () => {
+            done();
+        });
+    });
+
+    it('should handle basic HTTP auth', done => {
+        let req = new fetch.FetchStream('http://user:pass@localhost:' + HTTP_PORT + '/auth');
+        let buf = [];
+        req.on('data', chunk => {
+            buf.push(chunk);
+        });
+        req.on('end', () => {
             expect(Buffer.concat(buf).toString()).to.equal('user:pass');
             done();
         });
     });
 
-    it('should return error for invalid protocol', function (done) {
-        var req = new fetch.FetchStream('http://localhost:' + HTTPS_PORT, {
-            timeout: 1000
+    it('should handle basic HTTP auth from options', done => {
+        let req = new fetch.FetchStream('http://localhost:' + HTTP_PORT + '/auth', {
+            user: 'user',
+            pass: 'pass'
         });
-        var buf = [];
-
-        req.on('data', function (chunk) {
+        let buf = [];
+        req.on('data', chunk => {
             buf.push(chunk);
         });
-        req.on('error', function (err) {
+        req.on('end', () => {
+            expect(Buffer.concat(buf).toString()).to.equal('user:pass');
+            done();
+        });
+    });
+
+    it('should return error for invalid protocol', done => {
+        let req = new fetch.FetchStream('http://localhost:' + HTTPS_PORT, {
+            timeout: 1000
+        });
+        let buf = [];
+
+        req.on('data', chunk => {
+            buf.push(chunk);
+        });
+        req.on('error', err => {
             expect(err).to.exist;
             done();
         });
-        req.on('end', function () {});
+        req.on('end', () => {});
     });
 });

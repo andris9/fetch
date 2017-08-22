@@ -1,11 +1,10 @@
 'use strict';
 
-module.exports = function (grunt) {
-
+module.exports = function(grunt) {
     // Project configuration.
     grunt.initConfig({
         eslint: {
-            all: ['lib/*.js', 'test/*.js', 'Gruntfile.js', '.eslintrc.js']
+            all: ['lib/*.js', 'test/*.js', 'example/*.js', 'Gruntfile.js']
         },
 
         mochaTest: {

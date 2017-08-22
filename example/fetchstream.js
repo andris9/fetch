@@ -1,23 +1,25 @@
+/* eslint no-console:0 */
+
 'use strict';
 
-var FetchStream = require('../lib/fetch').FetchStream;
+const FetchStream = require('../lib/fetch').FetchStream;
 
-var fetch = new FetchStream('http://google.com', {
+let fetch = new FetchStream('http://google.com', {
     headers: {}
 });
 
-fetch.on('data', function (chunk) {
+fetch.on('data', chunk => {
     console.log(chunk);
 });
 
-fetch.on('meta', function (meta) {
+fetch.on('meta', meta => {
     console.log(meta);
 });
 
-fetch.on('end', function () {
+fetch.on('end', () => {
     console.log('END');
 });
 
-fetch.on('error', function (e) {
-    console.log('ERROR: ' + (e && e.message || e));
+fetch.on('error', e => {
+    console.log('ERROR: ' + ((e && e.message) || e));
 });

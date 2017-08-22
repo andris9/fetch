@@ -1,11 +1,12 @@
+/* eslint no-console:0 */
+
 'use strict';
 
 // fetch url and update charset to utf-8
-var fetchUrl = require('../lib/fetch').fetchUrl;
+const fetchUrl = require('../lib/fetch').fetchUrl;
 
-
-fetchUrl('http://kreata.ee/iso-8859-15.php', function(error, meta, body){
-    if(error){
+fetchUrl('http://kreata.ee/iso-8859-15.php', (error, meta, body) => {
+    if (error) {
         return console.log('ERROR', error.message || error);
     }
 

@@ -1,7 +1,3 @@
-## DEPRECATED
-
-This module is available under the name `fetch` in npm up to v1.x. Higher version numbers indicate another module
-
 # fetch
 
 Fetch url contents. Supports gzipped content for quicker download, redirects (with automatic cookie handling, so no eternal redirect loops), streaming and piping etc.
@@ -88,7 +84,8 @@ Possible option values
  * **agentHttp** pass-through http.request agent parameter for http
  * **agent** pass-through http.request agent parameter as fallback, if agentHttps or agentHttp are not specified
  * **rejectUnauthorized** whether to reject self-signed certificates (`true`, default behavior), or ignore and allow them (`false`)
-
+ * **user** is the username for Basic auth
+ * **pass** is the password for Basic auth
 
 ## Meta object
 
